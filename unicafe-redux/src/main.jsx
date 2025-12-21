@@ -1,28 +1,44 @@
-import ReactDOM from 'react-dom/client'
-import { createStore } from 'redux'
-import counterReducer from './reducers/counterReducer'
+import ReactDOM from "react-dom/client";
+import { createStore } from "redux";
+import counterReducer from "./reducers/counterReducer";
 
-const store = createStore(counterReducer)
+const store = createStore(counterReducer);
 
 const App = () => {
+  const good = () => {
+    store.dispatch({ type: "GOOD" });
+  };
+  const ok = () => {
+    store.dispatch({ type: "OK" });
+  };
+  const bad = () => {
+    store.dispatch({ type: "BAD" });
+  };
+  const zero = () => {
+    store.dispatch({ type: "ZERO" });
+  };
+
+  // Define aquí las funciones para OK, BAD y ZERO de la misma forma...
+
   return (
     <div>
-      <button onClick={() => store.dispatch({ type: 'GOOD' })}>good</button>
-      <button>ok</button>
-      <button>bad</button>
-      <button>reset stats</button>
-      <div>good {store.getState().good}</div>
-      <div>ok</div>
-      <div>bad</div>
-    </div>
-  )
-}
+      <button onClick={good}>good</button>
+      <button onClick={ok}>ok</button>
+      <button onClick={bad}>bad</button>
+      <button onClick={zero}>reset stats</button>
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
+      <div>good {store.getState().good}</div>
+      <div>ok {store.getState().ok}</div>
+      <div>bad {store.getState().bad}</div>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const renderApp = () => {
-  root.render(<App />)
-}
+  root.render(<App />);
+};
 
-renderApp()
-store.subscribe(renderApp)
+renderApp(); // Renderizado inicial
+store.subscribe(renderApp); // Se ejecuta cada vez que el estado cambia
