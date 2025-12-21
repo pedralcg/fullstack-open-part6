@@ -10,6 +10,20 @@ const App = ({ store }) => {
     });
   };
 
+  const addAnecdote = (event) => {
+    event.preventDefault();
+    const content = event.target.anecdote.value;
+    event.target.anecdote.value = "";
+    store.dispatch({
+      type: "NEW_ANECDOTE",
+      data: {
+        content,
+        id: (100000 * Math.random()).toFixed(0), // Generación simple de ID
+        votes: 0,
+      },
+    });
+  };
+
   return (
     <div>
       <h2>Anecdotes</h2>
@@ -22,6 +36,13 @@ const App = ({ store }) => {
           </div>
         </div>
       ))}
+      <h2>create new</h2>
+      <form onSubmit={addAnecdote}>
+        <div>
+          <input name="anecdote" />
+        </div>
+        <button type="submit">create</button>
+      </form>
     </div>
   );
 };
