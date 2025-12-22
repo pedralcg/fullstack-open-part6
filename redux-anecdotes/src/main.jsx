@@ -1,9 +1,11 @@
+import React from "react";
 import ReactDOM from "react-dom/client";
 import { createStore, combineReducers } from "redux";
-import anecdoteReducer from "./reducers/anecdoteReducer";
-import filterReducer from "./reducers/filterReducer";
+import { Provider } from "react-redux"; // 1. Importar el Provider
 
 import App from "./App";
+import anecdoteReducer from "./reducers/anecdoteReducer";
+import filterReducer from "./reducers/filterReducer";
 
 const reducer = combineReducers({
   anecdotes: anecdoteReducer,
@@ -12,11 +14,9 @@ const reducer = combineReducers({
 
 const store = createStore(reducer);
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-
-const renderApp = () => {
-  root.render(<App store={store} />);
-};
-
-renderApp();
-store.subscribe(renderApp);
+// 2. Envolver <App /> con <Provider store={store}>
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
