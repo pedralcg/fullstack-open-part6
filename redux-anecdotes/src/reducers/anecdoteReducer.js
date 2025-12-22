@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const anecdotesAtStart = [
   "If it hurts, do it more often",
   "Adding manpower to a late software project makes it later!",
@@ -19,49 +21,30 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "VOTE": {
-      const id = action.data.id;
-      const anecdoteToChange = state.find((n) => n.id === id);
-      const changedAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1,
-      };
-      // Devolvemos un nuevo array con la anécdota actualizada
-      return state.map((anecdote) =>
-        anecdote.id !== id ? anecdote : changedAnecdote
-      );
-    }
-
-    case "NEW_ANECDOTE": {
-      // Retornamos un nuevo array con la anécdota recibida en action.data
-      return [...state, action.data];
-    }
-
-    default:
-      return state;
-  }
-};
-
-// Action Creator para votar
-export const voteAnecdote = (id) => {
-  return {
-    type: "VOTE",
-    data: { id },
-  };
-};
-
-// Action Creator para crear anécdotas
-export const createAnecdote = (content) => {
-  return {
-    type: "NEW_ANECDOTE",
-    data: {
-      content,
-      id: (100000 * Math.random()).toFixed(0),
-      votes: 0,
+const anecdoteSlice = createSlice({
+  name: "anecdotes",
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      const content = action.payload;
+      // ¡Aquí puedes usar .push()! RTK se encarga de la inmutabilidad
+      state.push({
+        content,
+        id: getId(),
+        votes: 0,
+      });
     },
-  };
-};
+    voteAnecdote(state, action) {
+      const id = action.payload;
+      const anecdoteToChange = state.find((n) => n.id === id);
+      if (anecdoteToChange) {
+        anecdoteToChange.votes += 1; // ¡Mutación aparente permitida!
+      }
+    },
+  },
+});
 
-export default reducer;
+// Exportamos los action creators generados automáticamente
+export const { createAnecdote, voteAnecdote } = anecdoteSlice.actions;
+// Exportamos el reducer
+export default anecdoteSlice.reducer;
