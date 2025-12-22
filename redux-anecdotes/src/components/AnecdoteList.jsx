@@ -1,5 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { voteAnecdote } from "../reducers/anecdoteReducer";
+import {
+  setNotification,
+  clearNotification,
+} from "../reducers/notificationReducer";
 
 const AnecdoteList = () => {
   // 1. Usamos useSelector para obtener las anécdotas Y el filtro del estado global
@@ -19,9 +23,16 @@ const AnecdoteList = () => {
   // 3. Ordenamos las anécdotas filtradas por votos
   const sortedAnecdotes = [...anecdotes].sort((a, b) => b.votes - a.votes);
 
-  const vote = (id) => {
-    // 4. Despachamos la acción usando el hook
-    dispatch(voteAnecdote(id));
+  const vote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote.id));
+
+    // Mostramos el mensaje
+    dispatch(setNotification(`you voted '${anecdote.content}'`));
+
+    // Lo borramos tras 5 segundos
+    setTimeout(() => {
+      dispatch(clearNotification());
+    }, 5000);
   };
 
   return (
@@ -31,7 +42,7 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}
