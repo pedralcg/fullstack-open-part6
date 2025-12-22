@@ -1,4 +1,4 @@
-import { createAnecdote } from "../reducers/anecdoteReducer";
+import { appendAnecdote } from "../reducers/anecdoteReducer";
 import { useDispatch } from "react-redux";
 import {
   setNotification,
@@ -13,8 +13,15 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
 
+    // Creamos el objeto manualmente
+    const newAnecdote = {
+      content,
+      id: (100000 * Math.random()).toFixed(0),
+      votes: 0,
+    };
+
     // Usar dispatch() en lugar de store.dispatch()
-    dispatch(createAnecdote(content));
+    dispatch(appendAnecdote(newAnecdote));
 
     dispatch(setNotification(`new anecdote '${content}' created`));
     setTimeout(() => {
