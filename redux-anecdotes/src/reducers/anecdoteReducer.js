@@ -44,4 +44,24 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+// Action Creator para votar
+export const voteAnecdote = (id) => {
+  return {
+    type: "VOTE",
+    data: { id },
+  };
+};
+
+// Action Creator para crear anécdotas
+export const createAnecdote = (content) => {
+  return {
+    type: "NEW_ANECDOTE",
+    data: {
+      content,
+      id: (100000 * Math.random()).toFixed(0),
+      votes: 0,
+    },
+  };
+};
+
 export default reducer;
