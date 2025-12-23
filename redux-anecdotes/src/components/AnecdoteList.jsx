@@ -1,9 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setNotification,
-  clearNotification,
-} from "../reducers/notificationReducer";
 import { voteForAnecdote } from "../reducers/anecdoteReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
 const AnecdoteList = () => {
   // 1. Usamos useSelector para obtener las anécdotas Y el filtro del estado global
@@ -27,13 +24,7 @@ const AnecdoteList = () => {
     // Usamos el thunk asíncrono
     dispatch(voteForAnecdote(anecdote));
 
-    // Mostramos el mensaje
-    dispatch(setNotification(`you voted '${anecdote.content}'`));
-
-    // Lo borramos tras 5 segundos
-    setTimeout(() => {
-      dispatch(clearNotification());
-    }, 5000);
+    dispatch(setNotification(`you voted '${anecdote.content}'`, 5));
   };
 
   return (

@@ -1,10 +1,7 @@
 import { useDispatch } from "react-redux";
 // Importamos SOLO el Thunk que creamos en el reducer
 import { createAnecdote } from "../reducers/anecdoteReducer";
-import {
-  setNotification,
-  clearNotification,
-} from "../reducers/notificationReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
@@ -18,11 +15,8 @@ const AnecdoteForm = () => {
     // Él se encarga de hablar con el servidor y de hacer el appendAnecdote interno.
     dispatch(createAnecdote(content));
 
-    // 2. Notificación (esto cambiará en el 6.18)
-    dispatch(setNotification(`new anecdote '${content}' created`));
-    setTimeout(() => {
-      dispatch(clearNotification());
-    }, 5000);
+    // Notificación simplificada
+    dispatch(setNotification(`new anecdote '${content}' created`, 5));
   };
 
   return (
