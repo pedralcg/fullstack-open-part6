@@ -7,8 +7,6 @@ import App from "./App";
 import anecdoteReducer from "./reducers/anecdoteReducer";
 import filterSlice from "./reducers/filterReducer";
 import notificationReducer from "./reducers/notificationReducer";
-import anecdoteService from "./services/anecdotes";
-import { setAnecdotes } from "./reducers/anecdoteReducer";
 
 const store = configureStore({
   reducer: {
@@ -16,10 +14,6 @@ const store = configureStore({
     filter: filterSlice,
     notification: notificationReducer,
   },
-});
-
-anecdoteService.getAll().then((anecdotes) => {
-  store.dispatch(setAnecdotes(anecdotes));
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
