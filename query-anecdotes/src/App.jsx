@@ -1,10 +1,26 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { getAnecdotes } from './requests'
+import { getAnecdotes, updateAnecdote } from './requests'
 
 const App = () => {
+  const queryClient = useQueryClient()
+
+  // 1. Definimos la mutación para votar
+  const updateNoteMutation = useMutation({
+    mutationFn: updateAnecdote,
+    onSuccess: () => {
+      // Invalidamos la caché para forzar un re-fetch de la lista
+      queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+    },
+  })
+
+  const handleVote = (anecdote) => {
+    // 2. Ejecutamos la mutación enviando el objeto con el voto incrementado
+    updateNoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
+  }
+
   // 1. Definimos la consulta al servidor
   const result = useQuery({
     queryKey: ['anecdotes'],
@@ -24,10 +40,6 @@ const App = () => {
 
   // Si llegamos aquí, los datos existen en result.data
   const anecdotes = result.data
-
-  const handleVote = (anecdote) => {
-    console.log('vote', anecdote)
-  }
 
   return (
     <div>
