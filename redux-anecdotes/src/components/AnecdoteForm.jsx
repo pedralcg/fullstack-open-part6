@@ -4,21 +4,17 @@ import {
   setNotification,
   clearNotification,
 } from "../reducers/notificationReducer";
+import anecdoteService from "../services/anecdotes";
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
-  const addAnecdote = (event) => {
+  const addAnecdote = async (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
 
-    // Creamos el objeto manualmente
-    const newAnecdote = {
-      content,
-      id: (100000 * Math.random()).toFixed(0),
-      votes: 0,
-    };
+    const newAnecdote = await anecdoteService.createNew(content);
 
     // Usar dispatch() en lugar de store.dispatch()
     dispatch(appendAnecdote(newAnecdote));
