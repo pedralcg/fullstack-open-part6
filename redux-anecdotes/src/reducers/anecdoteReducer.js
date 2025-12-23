@@ -5,24 +5,39 @@ const anecdoteSlice = createSlice({
   name: "anecdotes",
   initialState: [],
   reducers: {
+    // Esta acción ahora recibe el objeto completo que viene del servidor
+    replaceAnecdote(state, action) {
+      const changedAnecdote = action.payload;
+      return state.map((a) =>
+        a.id !== changedAnecdote.id ? a : changedAnecdote
+      );
+    },
     appendAnecdote(state, action) {
       state.push(action.payload);
     },
     setAnecdotes(state, action) {
       return action.payload;
     },
-    voteAnecdote(state, action) {
-      const id = action.payload;
-      const anecdoteToChange = state.find((n) => n.id === id);
-      if (anecdoteToChange) {
-        anecdoteToChange.votes += 1;
-      }
-    },
   },
 });
 
-export const { appendAnecdote, setAnecdotes, voteAnecdote } =
+export const { replaceAnecdote, appendAnecdote, setAnecdotes } =
   anecdoteSlice.actions;
+
+// EL THUNK PARA EL 6.18
+export const voteForAnecdote = (anecdote) => {
+  return async (dispatch) => {
+    const anecdoteToVote = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+    const updatedAnecdote = await anecdoteService.update(
+      anecdote.id,
+      anecdoteToVote
+    );
+    dispatch(replaceAnecdote(updatedAnecdote));
+  };
+};
 
 // Action Creator Asíncrono (Thunk)
 export const initializeAnecdotes = () => {
