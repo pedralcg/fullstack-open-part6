@@ -24,11 +24,19 @@ const anecdoteSlice = createSlice({
 export const { appendAnecdote, setAnecdotes, voteAnecdote } =
   anecdoteSlice.actions;
 
-// 6.16: Action Creator Asíncrono (Thunk)
+// Action Creator Asíncrono (Thunk)
 export const initializeAnecdotes = () => {
   return async (dispatch) => {
     const anecdotes = await anecdoteService.getAll();
     dispatch(setAnecdotes(anecdotes));
+  };
+};
+
+// Thunk para crear una nueva anécdota
+export const createAnecdote = (content) => {
+  return async (dispatch) => {
+    const newAnecdote = await anecdoteService.createNew(content);
+    dispatch(appendAnecdote(newAnecdote));
   };
 };
 

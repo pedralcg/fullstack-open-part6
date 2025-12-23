@@ -34,6 +34,11 @@
       "id": "c1e0",
       "content": "Pedro sigue aprendiendo React",
       "votes": 0
+    },
+    {
+      "id": "d0de",
+      "content": "Los Thunks son dificiles",
+      "votes": 0
     }
   ]
 }
