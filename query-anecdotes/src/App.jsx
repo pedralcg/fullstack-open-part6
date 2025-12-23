@@ -3,6 +3,7 @@ import axios from 'axios'
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { getAnecdotes, updateAnecdote } from './requests'
+import { useNotificationDispatch } from './NotificationContext'
 
 const App = () => {
   const queryClient = useQueryClient()
@@ -16,9 +17,15 @@ const App = () => {
     },
   })
 
+  const dispatch = useNotificationDispatch()
+
   const handleVote = (anecdote) => {
-    // 2. Ejecutamos la mutación enviando el objeto con el voto incrementado
     updateNoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
+
+    dispatch({ type: 'SET', payload: `anecdote '${anecdote.content}' voted` })
+    setTimeout(() => {
+      dispatch({ type: 'CLEAR' })
+    }, 5000)
   }
 
   // 1. Definimos la consulta al servidor

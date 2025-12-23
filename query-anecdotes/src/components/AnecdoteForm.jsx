@@ -1,15 +1,33 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createAnecdote } from '../requests'
+// 1. Importa el hook personalizado del contexto
+import { useNotificationDispatch } from '../NotificationContext'
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
 
-  // Definimos la mutación
+  // 2. Obtén la función dispatch llamando al hook
+  const dispatch = useNotificationDispatch()
+
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
-    // Cuando la mutación tiene éxito, invalidamos la caché
-    onSuccess: () => {
+    onSuccess: (newAnecdote) => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
+
+      // 3. Úsalo para notificar el éxito
+      dispatch({
+        type: 'SET',
+        payload: `anecdote '${newAnecdote.content}' created`,
+      })
+      setTimeout(() => dispatch({ type: 'CLEAR' }), 5000)
+    },
+    onError: (error) => {
+      // 4. Úsalo para notificar errores (p. ej. validación de longitud)
+      dispatch({
+        type: 'SET',
+        payload: 'too short anecdote, must have length 5 or more',
+      })
+      setTimeout(() => dispatch({ type: 'CLEAR' }), 5000)
     },
   })
 
@@ -17,9 +35,6 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    console.log('new anecdote')
-
-    // Ejecutamos la mutación
     newAnecdoteMutation.mutate({ content, votes: 0 })
   }
 
